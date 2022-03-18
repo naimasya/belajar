@@ -32,12 +32,18 @@ class Gallery extends Component {
             cover: "",
             selectedItem: null,
        } 
+       this.state.filterBuku=this.state.buku
     }
     render(){
         return (
             <div className="container">
+                <input type="text" className="form-control my-2" placeholder="Pencarian"
+                    value={this.state.keyword}
+                    onChange={ev => this.setState({keyword: ev.target.value})}
+                    onKeyUp={ev => this.searching(ev)}
+                />
                 <div className="row">
-                    {this.state.buku.map( (item, index) => (
+                    {this.state.filterBuku.map( (item, index) => (
                         <Card
                         judul={item.judul}
                         penulis={item.penulis}
@@ -175,6 +181,20 @@ class Gallery extends Component {
         // hapus data
         tempBuku.splice(index, 1)
         this.setState({buku: tempBuku})
+        }
+    }
+
+    searching = event => {
+        if(event.keyCode === 13){
+        // 13 adalah kode untuk tombol enter
+        let keyword = this.state.keyword.toLowerCase()
+        let tempBuku = this.state.buku
+        let result = tempBuku.filter(item => {
+        return item.judul.toLowerCase().includes(keyword) ||
+        item.penulis.toLowerCase().includes(keyword) ||
+        item.penerbit.toLowerCase().includes(keyword)
+        })
+        this.setState({filterBuku: result})
         }
     }
 }
